@@ -1,5 +1,6 @@
 const { Multimedia } = require('../models/multimedia_SQL');
 const DropboxController = require('./dropboxController');
+const AzureBlobController = require('./AzureBlobController');
 
 // Controlador de Multimedia
 const ControllerMultimediaSQL = {
@@ -21,6 +22,31 @@ const ControllerMultimediaSQL = {
                 related_id: req.body.related_id,
                 type: req.body.type,
                 url: publicUrl, // Almacenar la URL de Dropbox
+            });
+
+            res.status(201).json(newMultimedia);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    },
+
+    createMultimediaAzure: async (req, res) => {
+        try {
+            // Verificar que se subió un archivo
+            if (!req.file) {
+                return res.status(400).json({ error: 'No se subió ningún archivo.' });
+            }
+
+            // Subir archivo a Azure Blob Storage y obtener la URL
+            const azureResponse = await AzureBlobController.uploadFile(req);
+            const publicUrl = azureResponse.url; // Obtener la URL pública de la respuesta
+
+            // Crear un nuevo multimedia en la base de datos
+            const newMultimedia = await Multimedia.create({
+                related_type: req.body.related_type,
+                related_id: req.body.related_id,
+                type: req.body.type,
+                url: publicUrl, // Almacenar la URL de Azure Blob Storage
             });
 
             res.status(201).json(newMultimedia);

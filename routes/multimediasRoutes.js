@@ -132,6 +132,63 @@ router.get('/related/:related_id/:related_type', multimediaController.getMultime
 
 /**
  * @swagger
+ * /api/multimedia/azure:
+ *   post:
+ *     summary: Crea un nuevo multimedia y lo sube a Azure Blob Storage
+ *     tags: [multimedia]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Archivo multimedia a subir
+ *               related_type:
+ *                 type: string
+ *                 description: Tipo relacionado (location, route, booking, experience)
+ *               related_id:
+ *                 type: integer
+ *                 description: ID relacionado con el tipo
+ *               type:
+ *                 type: string
+ *                 description: Tipo de multimedia (por ejemplo, imagen, video)
+ *     responses:
+ *       201:
+ *         description: Multimedia creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id_multimedia:
+ *                   type: integer
+ *                   description: ID del multimedia creado
+ *                 related_type:
+ *                   type: string
+ *                   description: Tipo relacionado
+ *                 related_id:
+ *                   type: integer
+ *                   description: ID relacionado
+ *                 type:
+ *                   type: string
+ *                   description: Tipo de multimedia
+ *                 url:
+ *                   type: string
+ *                   description: URL del archivo subido a Azure
+ *       400:
+ *         description: Error en la solicitud o archivo faltante
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.post('/azure', upload.single('file'), multimediaController.createMultimediaAzure);
+
+
+/**
+ * @swagger
  * /api/multimedia:
  *   post:
  *     summary: Crea un nuevo multimedia con subida de archivo

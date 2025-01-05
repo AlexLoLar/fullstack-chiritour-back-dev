@@ -1,7 +1,7 @@
 const swaggerJSDoc = require('swagger-jsdoc');
 require('dotenv').config();
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 const options = {
   definition: {
@@ -13,7 +13,7 @@ const options = {
     },
     servers: [
       {
-        url: `http://localhost:${port}`, 
+        url: `https://chiritour.azurewebsites.net`, 
       },
     ],
   },
